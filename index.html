@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.0/MarkerCluster.Default.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      #map {
+        width: 600px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    <script>
+      const imageUrl = "k1woujpafqqml8gq7ofr-transformed.png";
+      const imageBounds = [
+        [0, 0],
+        [1000, 600],
+      ]; // Ajusta según las dimensiones de tu imagen
+
+      var map = L.map("map", {
+        maxBounds: imageBounds, // Restringe el área de visualización
+        maxBoundsViscosity: 1.0, // Controla la elasticidad de los límites
+      }).setView([65, 300], 1); // Ajusta la vista según tus necesidades
+      map.options.minZoom = 1;
+      map.options.maxZoom = 4;
+      L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+      var markers = L.markerClusterGroup();
+
+      // for (let i = 0; i < 1000; i++) {
+      //   const marker = L.marker([getRandom(37, 39), getRandom(-9.5, -6.5)]);
+      //   markers.addLayer(marker);
+      // }
+
+      // function getRandom(min, max) {
+      //   return Math.random() * (max - min) + min;
+      // }
+
+      map.on("click", function (e) {
+        const marker = L.marker(e.latlng, {
+          icon: createCustomIcon("fa fa-coffee leaflet-marker-icon"),
+        }).addTo(map);
+
+        console.log(e.latlng);
+        marker
+          .bindPopup(
+            "<b>Detalles del Marcador</b><br>Aquí puedes agregar más detalles."
+          )
+          .openPopup();
+
+        markers.addLayer(marker);
+      });
+
+      function createCustomIcon(iconClass) {
+        return L.divIcon({
+          className: "leaflet-div-icon",
+          html: `<div><i class="${iconClass}"></i></div>`,
+          iconSize: [15, 15],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32],
+        });
+      }
+    </script>
+  </body>
+</html>
